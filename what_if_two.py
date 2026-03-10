@@ -1,0 +1,40 @@
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Load file
+df = pd.read_csv("microbit_readings.csv")
+
+# Split temp and humidity
+df[['temp','humidity']] = df.iloc[:,0].str.split(',', expand=True)
+
+# Convert to numbers
+df['temp'] = pd.to_numeric(df['temp'])
+df['humidity'] = pd.to_numeric(df['humidity'])
+
+# Time axis
+df['time'] = df.index
+
+# Gradual humidity doubling scenario
+growth = np.linspace(1, 2, len(df))
+df['humidity_gradual'] = df['humidity'] * growth
+
+# Simple fungal growth model
+# Growth increases strongly after 60% humidity
+df['fungi_growth'] = np.maximum(0, (df['humidity_gradual'] - 60)) ** 1.5
+
+# Plot
+plt.figure(figsize=(10,6))
+
+plt.plot(df["time"], df["humidity"], label="Original Humidity", marker="o")
+plt.plot(df["time"], df["humidity_gradual"], label="Simulated Humidity", linestyle="--")
+plt.plot(df["time"], df["fungi_growth"], label="Fungal Spread Index", color="green")
+
+plt.xlabel("Time Step")
+plt.ylabel("Value")
+plt.title("Humidity Increase and Fungal Spread Simulation")
+
+plt.legend()
+plt.grid(True)
+plt.show()
