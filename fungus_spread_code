@@ -1,0 +1,291 @@
+import serial        # Allows Python to communicate with an external device (e.g. Arduino or micro:bit) using USB
+import time          # Allows the program to pause for short periods of time
+import csv           # Allows us to write data to a CSV file
+import random        # Allows random numbers to be generated
+import math          # Allows maths opperations to be used
+import pygame        # Allows pygame to be used for simulation
+import pandas as pd  # Allows use to use the information collected in csv to be used in graphs etc.
+import matplotlib.pyplot as plt      #Allows us to plot the data on a graph
+import numpy as np   # Allows us to perform mathematical calculations in the model
+
+# serial data collecting  **BR2**
+
+ser = serial.Serial()    # Create a serial connection object (this represents the USB connection)
+ser.baudrate = 115200    # Set how fast data is sent and received (must match the device's speed - 115200 is speed of a microbit)
+ser.port = "COM7"        # Set the USB/COM port the device is connected to
+                        
+
+try:
+    ser.open()               # Open the connection so data can be read from the device
+    print("Serial connected")
+    csvfile = "microbit_readings.csv"   # Name of the CSV file we will write the data to
+    open(csvfile, "w").close()  # NEW: clear file so old data is not mixed with new data
+    myList = []              # Create an empty list to store the data we receive
+    count = 0                # Create a counter to keep track of how many readings we take
+
+    while count < 10:        # Repeat the code below until we have read data 10 times
+
+        data1 = ser.readline().decode().strip()
+    # Read one line of data from the device
+    # Convert it from computer bytes into readable text
+    # Remove extra spaces and new line characters
+
+        time.sleep(0.5)      # Pause the program for half a second
+        print(data1)         # Show the received data on the screen
+        myList.append(data1) # Add the received data to the list
+
+        # Write the data to the CSV file 
+        # Open the CSV file in append mode ("a") so we do not overwrite previous data
+        with open(csvfile, "a", newline="") as f:
+            writer = csv.writer(f)       # Create a CSV writer object
+            writer.writerow([data1])     # Write the data as a single row in the CSV file
+        # ---------------------------------------
+
+        count += 1           # Increase the counter by 1
+
+    ser.close()              # Close the connection to the device
+
+except:
+    print("Serial failed - skipping data collection") # if collecting data fails
+
+print("Data collection complete")
+
+
+# load data to plot graph
+# try to load real micro:bit data first
+try:
+    df = pd.read_csv("microbit_readings.csv")
+    if df.empty:
+        raise ValueError("Main CSV is empty")
+    print("Using real micro:bit data")
+
+except:
+    print("Main CSV failed, using backup data")  #if main csv failes it creates a new csv file (backup_readings.csv)
+    try:
+        df = pd.read_csv("backup_readings.csv")
+    except:
+        print("Backup missing, generating dummy data")
+        df = pd.DataFrame({                  #creates dummy data to be able to run the rest of the code
+            "temp": [22, 23, 24, 25, 26],
+            "humidity": [50, 55, 60, 65, 70]
+        })
+
+
+#takes in the csv to split and plot 
+if df.shape[1] == 1:
+    df[['temp','humidity']] = df.iloc[:,0].str.split(",", expand=True) # splits the the data to be read into the graph
+
+# Convert to numbers
+df['temp'] = pd.to_numeric(df['temp'])
+df['humidity'] = pd.to_numeric(df['humidity'])
+
+
+#plot real data collected
+plt.plot(df.index, df["temp"], marker="o", label="Temperature")
+plt.plot(df.index, df["humidity"], marker="s", label="Humidity")
+
+plt.legend()
+plt.grid(True)
+plt.title("Temperature and Humidity Readings")
+plt.show()
+
+
+#simulation 1   ***AR2*** #######################################
+#hot and not humid
+#warm and humid
+
+#creates lists to append data into to be used in a graph later in the code
+time_steps = []
+infected_A = []
+infected_B = []
+step = 0
+
+#sets grid size and cell size and margin
+GRID_SIZE = 8
+CELL_SIZE = 80
+MARGIN = 60
+
+#sets width and hight for the window
+WIDTH = GRID_SIZE * CELL_SIZE * 2 + MARGIN
+HEIGHT = GRID_SIZE * CELL_SIZE
+
+pygame.init()  #loads all the modules, graphics, fonts, etc.
+screen = pygame.display.set_mode((WIDTH, HEIGHT)) #creates the window
+pygame.display.set_caption("Tree Fungus Spread Comparison") #sets the text at the top of the window
+
+clock = pygame.time.Clock() #controles time and speed  
+font = pygame.font.SysFont(None, 50) #sets font to default and font size to 50
+
+#sets colors for later use in code
+GREEN = (50,160,60)
+BLACK = (30,30,30)
+WHITE = (240,240,240)
+
+# 2 scenarios ##########################################################
+scenarioA = {"temp":32, "humidity":0}   # hot and dry
+scenarioB = {"temp":25, "humidity":65}  # ideal fungus conditions
+
+healthy_tree = pygame.image.load("healthy_tree.png")
+infected_tree = pygame.image.load("infected_tree.png")
+
+healthy_tree = pygame.transform.scale(healthy_tree, (CELL_SIZE, CELL_SIZE))
+infected_tree = pygame.transform.scale(infected_tree, (CELL_SIZE, CELL_SIZE))
+
+# creates two boards
+gridA = [[0]*GRID_SIZE for _ in range(GRID_SIZE)]
+gridB = [[0]*GRID_SIZE for _ in range(GRID_SIZE)]
+
+# starts infection in center
+gridA[2][2] = 1
+gridB[2][2] = 1
+
+def count_infected(grid):
+    return sum(sum(row) for row in grid)
+
+
+########MODEL??? ***AR1** - formula used in simulation?################################################################
+def infection_probability(temp, humidity):
+
+    temp_factor = math.exp(-((temp - 25)**2)/20) # This creates a bell curve centered at 25°C
+
+# Temp    Spread
+# 15°C    low
+# 20°C    medium
+# 25°C    highest
+# 30°C    lower
+# 35°C    very low
+
+    humidity_factor = 0
+    if humidity > 65:
+        humidity_factor = min((humidity - 65)/35,1)
+        # humidity-65 normalises the range
+        # dividing by 35 creates a fraction
+        # min ensures it does not exceed 1
+
+# below 65% → little spread
+# above 65% → increasing spread
+
+    return 0.05 + 0.6*temp_factor + 0.35*humidity_factor
+# 0.05 = base chance always present in forests
+# 0.6 = temperature has biggest influence
+# 0.35 = humidity also important
+
+def neighbors(x,y): #finding nearby trees
+
+    dirs = [(-1,0),(1,0),(0,-1),(0,1)]
+#left (-1, 0)
+#right (1, 0)
+#up (0, -1)
+#down (0, 1)
+    for dx,dy in dirs: #it calculates the position of each neighbour
+        nx,ny = x+dx,y+dy
+        if 0 <= nx < GRID_SIZE and 0 <= ny < GRID_SIZE: #prevents going outside the grid
+            yield nx,ny #returns each valid neighbour one at a time
+
+def spread(grid,temp,humidity): #spread function
+    prob = infection_probability(temp,humidity) ##Calculates chance of infection based on, temp and humidity
+    new = [row[:] for row in grid] #Prevents updating the grid while still reading it
+
+    for y in range(GRID_SIZE): #loops through every tree in the forest
+        for x in range(GRID_SIZE):
+            if grid[y][x] == 1: #only the infected trees can spread the fungus
+                for nx,ny in neighbors(x,y): #Checks all neighbouring trees using the function ( neighbors(x,y) )
+                    if grid[ny][nx] == 0:  #only will infect healthy trees
+                        if random.random() < prob: #infection happens randomly based on probability
+                    # random.random() gives a random number between 1 and 0, if its less than prob then infection happens
+                            new[ny][nx] = 1
+
+    return new  #returns updated grid
+
+#sets up a timer and sets running to true to start loop
+timer = 0
+running = True
+
+while running: #lets the user close the window
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    timer += clock.get_time() #adds time passed since last frame
+
+    if timer > 1000:   # updates both scenarios every 1 second
+        gridA = spread(gridA, scenarioA["temp"], scenarioA["humidity"])
+        gridB = spread(gridB, scenarioB["temp"], scenarioB["humidity"])
+        step += 1
+  
+        time_steps.append(step)
+        infected_A.append(count_infected(gridA))
+        infected_B.append(count_infected(gridB))
+        #appends all results for graphs
+        
+        timer = 0 #starts counter again for next second
+    screen.fill(WHITE) #it clears previous frame before drawing a new one
+
+# scenario A high temp, lower humidity
+    for y in range(GRID_SIZE): #goes through every square in the grid  
+        for x in range(GRID_SIZE):
+            if gridA[y][x] == 1: #checks if == 1 (0 for healthy tree, 1 for infected tree)
+                screen.blit(infected_tree, (x*CELL_SIZE, y*CELL_SIZE))
+            else: #draws the correct tree
+                screen.blit(healthy_tree, (x*CELL_SIZE, y*CELL_SIZE))
+
+# scenario B, warm and humid
+    offset = GRID_SIZE*CELL_SIZE + MARGIN #calculates how far to move the second grid to the right
+    for y in range(GRID_SIZE):  #goes through every square in the grid  
+        for x in range(GRID_SIZE):
+            if gridB[y][x] == 1:   #checks if == 1 (0 for healthy tree, 1 for infected tree)
+                #draws the correct tree
+                screen.blit(infected_tree, (offset + x*CELL_SIZE, y*CELL_SIZE))
+            else:
+                screen.blit(healthy_tree, (offset + x*CELL_SIZE, y*CELL_SIZE))
+
+    # labels for pygame model and sets the text to black
+    textA = font.render("Hot & Dry", True, BLACK)
+    textB = font.render("Warm & Humid", True, BLACK)
+    #sets size for the text
+    screen.blit(textA, (80, HEIGHT-30))
+    screen.blit(textB, (offset+60, HEIGHT-30))
+
+    pygame.display.flip() #pushes the updated forest to screen
+    clock.tick(60) #Limits the loop to 60 frames per second 
+
+pygame.quit()
+
+#plot results of the simulation 1
+
+plt.plot(time_steps, infected_A, label="Hot & Dry")  #plot the graph for the hot and dry simulation
+plt.plot(time_steps, infected_B, label="Warm & Humid") #plot the graph for warm and humid 
+
+#labels the  x and y axes, and adds title 
+plt.xlabel("Time Step")
+plt.ylabel("Infected Trees")
+plt.title("Fungal Infection Spread")
+#creates legend
+plt.legend()
+plt.grid(True) #adds grid
+plt.show() #shows th graph on screen
+
+# Humidity doubling simulation 2
+df['time'] = df.index
+
+# Gradual humidity doubling
+growth = np.linspace(1, 2, len(df))
+df['humidity_gradual'] = df['humidity'] * growth
+
+# Growth increases strongly after 65% humidity #####################################################################################2nd model????
+df['fungi_growth'] = np.maximum(0, (df['humidity_gradual'] - 65)) ** 1.5   #formula for fungal growth
+#as it increases and goes past 65 % humidity the fungal growth increases 1.5 times faster to simulate real world process
+
+# Plot results of simulation 2
+plt.figure(figsize=(10,6))
+
+plt.plot(df["time"], df["humidity"], label="Original Humidity", marker="o") #shows a "o" wherever it coresponds to the data collected on the graph 
+plt.plot(df["time"], df["humidity_gradual"], label="Simulated Humidity", linestyle="--") #shows a "--" wherever it coresponds to the simulated on the graph 
+plt.plot(df["time"], df["fungi_growth"], label="Fungal Spread Index")   # labels the fungal growth "fungal spread index
+
+plt.xlabel("Time Step") #labels x axis
+plt.ylabel("Value") #labels y axis
+plt.title("Fungal Spread Simulation if Humidity Doubles") #sets a title
+plt.legend() #show the legend of the graph
+plt.grid(True) #creates a grid
+plt.show()  # shows the graph on screen
