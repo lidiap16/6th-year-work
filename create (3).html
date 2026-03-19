@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="eng">
+<head>
+    <title>Course Work Project 2025/26, Create</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+   <div class="navbar">
+  
+	<ul >
+		<span class=navbar-name>Exam No: 356992</span>
+	
+        <a href="index.html">🏡 Home</a>
+        <a href="meetbrief.html">Meeting the Brief</a>
+        <a href="investigation.html">Investigation</a>
+		<a href="planning.html">Planning & Design</a>
+		<a href="create.html">Create</a>
+		<a href="evaluation.html">Evaluation</a>
+		<a href="references.html">References & Wordcount</a>
+	</ul>
+	
+    </div>
+    <div class="content">
+        <h1>Create</h1>
+		<br>
+        <p id="example">development milestones:</p>
+		
+		<p id="day"> log 1: </p>
+		    <ul id="log">
+			<li>I got the microbit up and running and taking in data from the DHT11 sensor, this meets the BR1 a2) requirement of an analogue input. I did this by using the microbits  "dht11/dht22" extension in microbit makecode</li>
+		   </ul>
+		<p id="day">log 2:</p>
+		<ul id="log">
+			<li>On button A pressed finaly works to start the system, this meets the BR1 a1) requirement of an digital input and the system runs completely automatically after button A is pressed on the microbit which satisfies BR1 c)</li>
+		</ul>
+		
+		<p id="day">log 3:</p>
+		<ul id="log">
+			<li>The microbit now is able to show icons, a "X" and "✔" depending whether the humidity is above or below 65, this meets the BR3 and BR1 b) requirements, as the microbit is able to respond to the changing environment as it displayes different icons, it also covers the requirement of having at least one primary output as the leds are a digital output. </li>
+			<li>The microbit was tested using a hairdryer to silulate wind and heat and to simulate humidity I used my breath to rise the humidity, the micro bit responded with correct icons showing when the conditions were dangerous.
+			<li>I decided to use the "X" and "✔" as my warning system to inform and warn when the conditions are dangerous for the trees by displaying an "X" when the conditions are dangerous and a "✔" when the conditions are safe, this satisfies AR 3)
+		</ul>
+		
+		<p id="day">Log 4:</p>
+		<ul id="log">
+			<li>The model has been finalised today using and the math library in Thonny, the model uses the data collected in the csv and puts it through the fomula that I made where the probability of fungus spreading is calculated using the temp in a bell curve where 25 is at the top and for when the humidity passes 65 the probablity further increases and at the end it shows a graph using the "matplotlib" library in Thonny, this satisfies requirement AR1)  </li>
+			
+		</ul>
+
+		<p id="day">log 5:</p>
+		<ul id="log">
+			<li>The what if scenarios finaly work using "pygame" in Thonny. There are two scenarios, 1 shows how the fungus would spread if it was really hot but dry; like what if there was a drought, and scenario 2 shows the fungus spreading if both the temperature was high and the humidity; like what if there was a storm. This meets the AR2 requirement.   </li>
+			<li>The two scenarios are shown on a square board with different tree images for healthy and unhealthy trees. </li>
+			
+		</ul>
+		<p id="day">log 6:</p>
+		<ul id="log">
+			<li>To finish the python code off i decided to include a graph of the result from the two scenarios, this helps to make it easier to interpret and analyze the difference in the scenarios.</li>
+			
+		</ul>
+
+	
+		<p><h2>Testing</h2></p>
+		<li><p>For this project I did white box testing I know all the ins and outs of my code, I need manual testing for the microbit to check if the button functionality works, I also tested if the right icons are being displayed depending on the environment the microbit is in. I need functional testing to see if the code overall satisfies the needed functions,i need to check the boundry inputs to see if everything works as expected.
+</li>
+		<hr>
+				<br>
+		<p id="example">Test Tables:</p>
+		<p id="example">Manual testing for microbit</p>
+		<table id=table>
+			<tr>
+				<th>Test ID</th>
+				<th>Description</th>
+				<th><p>Test</p>
+					<p>Data</p>
+				</th>
+				<th><p>Expected</p>
+					<p>Result</p>
+				</th>
+				<th><p>Actual</p>
+					<p>Result</p>
+				</th>
+				<th><p>Passed:</p>
+					<p>Y/N</p>
+				</th>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>Testing if microbit displayes anything before button A is pressed </td>
+				<td>nothing pressed</td>
+				<td>no lights on microbit showing </td>
+				<td>no lights on microbit showing </td>
+				<td>Y</td>
+			</tr>
+			<tr>
+				<td>2</td>
+				<td>test if leds show icon after button A is pressed; looking at led display </td>
+				<td>Button A is pressed</td>
+				<td>Icon shows up on led display either an "X" or "✔"</td>
+				<td>Icon shows up on led display either an "X" or  "✔" </td>
+				<td>Y</td>
+			</tr>
+			
+			<tr>
+				<td>3</td>
+				<td>test if microbit stops after button B is pressed; looking at leds</td>
+				<td>Button B is pressed</td>
+				<td>No icon shows up on led display </td>
+				<td>No icon shows up on led display </td>
+				<td>Y</td>
+			</tr>
+			
+		    <tr>
+				<td>4</td>
+				<td>Test if microbit stops after button B is pressed; looking at information flowing in through the USB</td>
+				<td>Button B is pressed</td>
+				<td>No icon shows up on led display </td>
+				<td>No icon shows up on led display </td>
+				<td>Y</td>
+			</tr>
+			
+			<tr>
+				<td>5</td>
+				<td>Test if microbit stops after button B is pressed; looking at information flowing in through the USB</td>
+				<td>Button B is pressed</td>
+				<td>No icon shows up on led display </td>
+				<td>No icon shows up on led display </td>
+				<td>Y</td>
+			</tr>
+		
+		</table>
+
+	<h3><p id="example">Functional testing for microbit</p></h3>
+		<table id=table>
+			<tr>
+				<th>Test ID</th>
+				<th>Description</th>
+				<th><p>Test</p>
+					<p>Data</p>
+				</th>
+				<th><p>Expected</p>
+					<p>Result</p>
+				</th>
+				<th><p>Actual</p>
+					<p>Result</p>
+				</th>
+				<th><p>Passed:</p>
+					<p>Y/N</p>
+				</th>
+			</tr>
+
+			<tr>
+				<td>1</td>
+				<td>test boundry input, test if correct icon for over 65 humidity shows on led display</td>
+				<td>humidity  =  65</td>
+				<td>"X" icon displayed</td>
+				<td>"X" icon displayed</td>
+				<td>Y</td>
+			</tr>
+			<tr>
+				<td>2</td>
+				<td>test boundry input, test if correct icon for under or equal to 65 humidity shows on led display</td>
+				<td>humidity  =  65</td>
+				<td>"✔" icon displayed</td>
+				<td>"✔" icon displayed</td>
+				<td>Y</td>
+			</tr>
+			<tr>
+				<td>3</td>
+				<td>Test if correct temperature data is being sent through the USB by the DHT11 sensor</td>
+				<td>Indoor conditions</td>
+				<td>temperature is around 19 degrees</td>
+				<td>temperature around 22 degrees</td>
+				<td>N</td>
+			</tr>
+			<tr>
+				<td>4</td>
+				<td>Test if correct humidity data is being sent through the USB by the DHT11 sensor</td>
+				<td>Indoor conditions</td>
+				<td>Humidity is around 40-50</td>
+				<td>Humidity is around 40-50</td>
+				<td>Y</td>
+			</tr>
+			
+		</table>
+		<br>
+		<hr>
+		<p id="example">Problems Encountered:</p>
+
+			<br>
+			<p>I struggled for a while trying to figure out the alarm sistem for my microbit as whenever I tried to use sound it would break my code. the sensor would completely stop tecording more data after the alarm was triggered which is something i didnt want for my project.</p>
+			<li>I tried many different ways to fix this problem but nothing unfortunately worked. I tried to research the problem and came back with the result of that the microbit has a bug when using the sound function in the microbit.</li>
+			 <li>To overcome this problem for the alerting system I researched other alerting systems and one was light, therefore I decided that I will use the microbits led display as my alerting system changing the icon whenever the conditions change to worse or better. </li>
+		<P>Another problem i faced was during the creation of my model as i needed to figure out a way to be able to use a backup csv file since when the project is handed up the correctors dont have the microbit circuits with them so they cant get the data in through a USB from the microbit.</p>
+		<li>I researched solutions on <a href="https://www.w3schools.com/python/python_try_except.asp#:~:text=The%20try%20block%20lets%20you,the%20try%2D%20and%20except%20blocks."> w3schools </a> and <a href="https://www.geeksforgeeks.org/python/python-try-except/">geeks for geeks </a> where I found the solution of using "Try" and "except" which allows the code to run through and try and see if the file needed is there and if not it will look for a backup file; which uses real data that has been collected, and if that fails it will create a dummy file with hard coded values to be able to run the rest of the code.
+		
+		</p>
+		<p><h2> Model breakdown: </h2></p>
+		<p><img src="fungusmodel.png"></p>
+<p>The function calculates the probability of the fungus spreading by using temperature and moisture in the formula, due to the best living conditions of the fungus peak at 25 degrees celcius and as the temperature continues to increas the fungus actualy starts to slow down and spread less therefore, I have created a bell curve to support the realistic life cycle of the fungus that I researched in the investigation stage of the project.</p>
+<p>The bell curve lets us calculate the spread more realisticaly, when the temperature is low the spread is low, when the temperature reaches 25 the spread has the highest spread chance and when the temperature rises even higher the spread chance goes back down as the high temperature doesnt let the fungus thrive.</p>
+<li> (temp - 25) gives the distance from ideal temperature (25°C),  (...)² makes it always positive then the divide by twenty (/20) controls how wide the curve is and lastly for temperature the "exp(...)" turns the temperature factor into a smooth curve between 0 and 1</li>
+<p> The huidity factor works by first minising 65 from humidity (humidity-65) to normalises the range then dividing by 35 creates a fraction and "min" ensures it does not exceed 1</p>
+<li>If the humidity is below 65% there is little spread and if its above 65% there is an increase in the spread</li>
+<p>Lastly the two factors are combined where the base chance of the fungus spreading is 0.05 because there is always a chance, and 0.6 is multiplied by the temperature factor as it is a major part of the fungus being able to spread, and lastly 0.35 is multiplied by the humidity factor to complete the formula for the probability of the fungus spreading. 
+<p> this model is used to calculate the probability of fungus spreading and therefore how major the risk for the trees in the area to contract the desease.
+
+
+</p>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

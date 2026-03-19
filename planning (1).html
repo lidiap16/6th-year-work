@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="eng">
+<head>
+    <title>Course Work Project 2025/26, Planning</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+   <div class="navbar">
+  
+	<ul >
+		<span class=navbar-name>Exam No: 356992</span>
+        <a href="index.html">🏡 Home</a>
+        <a href="meetbrief.html">Meeting the Brief</a>
+        <a href="investigation.html">Investigation</a>
+		<a href="planning.html">Planning & Design</a>
+		<a href="create.html">Create</a>
+		<a href="evaluation.html">Evaluation</a>
+		<a href="references.html">References & Wordcount</a>
+	</ul>
+	
+    </div>
+    <div class="content">
+        <h1>Planning & Design</h1>
+		
+		<p><h2>Design objectives</h2></p>
+	<p>BR1, I will be using a microbit as my embedded system. I will be using a DHT11 sensor as my analogue input and i will use the button A  as my digital input. My system will have an alarm and the data collected by the sensor as its outputs. The microbit will start by pressing button A and after that it will run automatically . 
+</p>
+<p>BR2, the DHT11 sensor will be collecting temperature and moisture data which will then be saved to a SCV file and used in my risk of fungi spreading model 
+</p>
+<p>BR3, the microbit will be taking in data in real time and when the moisture levels reach over the threshold, the microbit will set off a warning sign. i will show in real time how it responds to things like windy conditions and very moist conditions. 
+</p>
+<p>AR1, my python model will calculate how high the risk of fungi spreading is according to the temperature and moisture. I will be using the data collected from the microbit .  A graph will be created using matplotlib to show all the results in a visual manner and be easier to understand. 
+</p>
+<p>AR2, 1 what if the tempeture is high and the humidity is low,  2 what iff both temperature and humidity are high. I will be using outsourced data for these scenarios 
+</p>
+<p>AR3, I will have an alarm in my microbit when the humidity is high, displaying an image informing the user of the danger 
+</p>
+
+<p><h2>Different project options considered</h2></p>
+<p>From completing the investigation stage, I have learned that the fungus that affects the ash tree needs elevated temperature and high moisture to thrive. So, for my microbit embedded system I knew I had to use a temperature sensor and a moisture sensor.  
+</p>
+<p>I found out that the micro bit has an imbedded temperature sensor inside but upon further research I found that it was a little bit faulty as the temperature would stay solid at around 20 degrees due to it being so close to the other components on the micro bit. 
+</p>
+<p>I was also investigating different moisture sensors and found that some would stop working after a short while  
+</p>
+ <p>Due to this I started researching external sensors that I could connect to the microbit via a breakout board, I was able to find a sensor named DHT11 (a temperature and humidity sensor). This sensor was perfect for my project as it could measure both temperature and moisture. 
+</p>
+
+<p><h2>technologies used and justified</h2></p>
+<p>import serial     - It is needed for Python to be able to communicate with an external device (e.g. Arduino or micro:bit) using USB 
+</p>
+<p>import time      - It is needed so that the program can pause for short periods of time 
+</p>
+<p>import csv          - It is needed to be able to write data to a CSV file 
+</p>
+<p>import random     - It is needed so that random numbers can be generated in Thonny
+</p>
+<p>import math    - It is needed for math opperations to work in Thonny
+</p>
+<p>import pygame   - It is needed to be able to create symulations with visuals
+</p>
+<p>import pandas - It is needed so that the information collected in csv to be used in graphs and model 
+</p>
+<p>import matplotlib.pyplot   - It is needed to be able to plot the data on a graph 
+</p>
+<p>import numpy - It is needed so that Thonny can perform mathematical calculations in the model 
+</p>
+
+<p> <h2>Stakeholders</h2></p> 
+<p>
+National parks that have ash tree(s)</p>
+<p>
+<a href="https://www.treecouncil.ie/about-us">Tree Council</a> </p>
+<p>
+ Any person(s) that has an ash tree(s).
+</p>
+ 
+ 
+	</div>
+	
+	
+	
+    <script src="script.js"></script>
+</body>
+</html>
